@@ -1,0 +1,32 @@
+<html>
+<head>
+  <script 
+    src="https://thunkable.github.io/webviewer-extension/thunkableWebviewerExtension.js"
+    type="text/javascript">
+  </script>
+</head>
+
+<body>
+  <script>
+    ThunkableWebviewerExtension.receiveMessage(function(message) {
+      // Parse incoming message from Thunkable
+      const twoTimes = JSON.parse(message);
+
+      // Function to convert HH:MM:SS or HH:MM to total seconds
+      const parseTime = (timeString) => {
+        const [hours, minutes, seconds] = timeString.split(":").map(Number);
+        return hours * 3600 + minutes * 60 + (seconds || 0);
+      };
+
+      // Convert both times to seconds
+      const startTimeInSeconds = parseTime(twoTimes.startTime);
+      const endTimeInSeconds = parseTime(twoTimes.endTime);
+      const timeDifferenceInSeconds = endTimeInSeconds - startTimeInSeconds;
+
+      ThunkableWebviewerExtension.postMessage(
+        JSON.stringify({ value: timeDifferenceInSeconds })
+      );
+    });
+  </script>
+</body>
+</html>
